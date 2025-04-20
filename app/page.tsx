@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import CardForm from './payment-card/Form';
 import TransactionList from './transactions/List';
@@ -11,9 +11,30 @@ type TransactionIds = Transaction[];
 export default function Home() {
   const [transactionIds, setTransactionIds] =
     useState<TransactionIds>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/transactions', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const result = await response.json();
+        setTransactionIds(result);
+      } catch (error) {
+        console.error('Failed to fetch transaction data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
   const handleSubmit = async (
     event: React.FormEvent,
-    formData: any
+    formData: any,
+    callBack: () => void
   ) => {
     event.preventDefault();
     // Encrypt the form data
@@ -32,6 +53,7 @@ export default function Home() {
 
     const result = await response.json();
     setTransactionIds([...transactionIds, result]);
+    callBack();
   };
 
   return (

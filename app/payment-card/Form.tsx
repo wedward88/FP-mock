@@ -4,7 +4,11 @@ import { useState } from 'react';
 import { CardData } from '../types/types';
 
 interface CardFormProps {
-  onSubmit: (event: React.FormEvent, formData: CardData) => void;
+  onSubmit: (
+    event: React.FormEvent,
+    formData: CardData,
+    callBack: () => void
+  ) => void;
 }
 const CardForm = ({ onSubmit }: CardFormProps) => {
   const defaultFormData: CardData = {
@@ -49,9 +53,15 @@ const CardForm = ({ onSubmit }: CardFormProps) => {
     }));
   };
 
+  const onSubmitCallback = () => {
+    setFormData(defaultFormData);
+  };
+
   return (
     <form
-      onSubmit={(event) => onSubmit(event, formData)}
+      onSubmit={(event) =>
+        onSubmit(event, formData, onSubmitCallback)
+      }
       className="flex flex-col space-y-5"
     >
       <p className="label">Card Number</p>

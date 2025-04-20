@@ -5,16 +5,16 @@ interface TransactionIds {
 }
 
 const TransactionList = ({ transactionIds }: TransactionIds) => {
-  console.log(transactionIds[0]);
   return (
     <div>
-      <h2>Transaction List</h2>
-      <ul>
+      <h2 className="text-xl mb-5">Transaction List</h2>
+      <ul className="flex flex-col h-full space-y-2">
         {transactionIds.map((transaction) => (
-          <li key={transaction.id}>
-            <a
-              href={`/api/transaction?transactionId=${transaction.id}`}
-            >
+          <li
+            key={transaction.id}
+            className="p-2 cursor-pointer border-1 border-gray-300 rounded-xl text-gray-500 hover:text-black"
+          >
+            <a href={`/transactions/${transaction.id}`}>
               {transaction.id}
             </a>
           </li>

@@ -9,4 +9,4 @@ export type CardData = {
 
 export type Transaction = {
   id: string;
-};
+} & CardData;
