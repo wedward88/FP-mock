@@ -4,7 +4,15 @@ import { mockDB } from '../mockDB';
 
 export async function GET(request: NextRequest) {
   const body = await request.json();
-  const transcation = mockDB[body.id];
+  if (!body.id) {
+    return NextResponse.error();
+  }
 
-  return NextResponse.json(transcation);
+  const transaction = mockDB[body.id] ?? null;
+
+  if (!transaction) {
+    return NextResponse.error();
+  }
+
+  return NextResponse.json(transaction);
 }

@@ -1,84 +1,127 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-type FormData = {
-  number: string;
-  name: string;
-  expiration: string;
-  cvv: string;
-};
+import { CardData } from '../types/types';
 
-const CardForm = () => {
-  const defaultFormData: FormData = {
+interface CardFormProps {
+  onSubmit: (event: React.FormEvent, formData: CardData) => void;
+}
+const CardForm = ({ onSubmit }: CardFormProps) => {
+  const defaultFormData: CardData = {
     number: '',
     name: '',
-    expiration: '',
+    expirMonth: '',
+    expirYear: '',
     cvv: '',
+    amount: '',
   };
 
-  const [formData, setFormData] = useState<FormData>(defaultFormData);
+  const [formData, setFormData] = useState<CardData>(defaultFormData);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { name, value } = event.target;
 
+    // Only allow numbers and decimal points for the below fields
+    const numericFields = [
+      'expirMonth',
+      'expirYear',
+      'cvv',
+      'amount',
+    ];
+    let formattedValue = numericFields.includes(name)
+      ? value.replace(/[^\d.]/g, '') // removes non-digits
+      : value;
+
+    // Format card number as XXXX XXXX XXXX XXXX
+    if (name === 'number') {
+      // Remove all non-digit characters
+      const digits = value.replace(/\D/g, '');
+
+      // Group into chunks of 4
+      formattedValue = digits.match(/.{1,4}/g)?.join(' ') ?? '';
+    }
+
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: formattedValue,
     }));
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    const response = await fetch('/api/payment', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
-
-    // const result = await response.json();
-    // console.log('Transaction ID:', result.id);
-  };
-
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col space-y-5">
+    <form
+      onSubmit={(event) => onSubmit(event, formData)}
+      className="flex flex-col space-y-5"
+    >
+      <p className="label">Card Number</p>
       <input
         type="text"
         inputMode="numeric"
-        pattern="[0-9\s]{13,19}"
         autoComplete="cc-number"
-        max="19"
+        maxLength={19}
         placeholder="xxxx xxxx xxxx xxxx"
         name="number"
+        value={formData.number}
         className="input"
         onChange={handleChange}
         required
       />
+      <p className="label">Cardholder Name</p>
       <input
         type="text"
         placeholder="John Doe"
         name="name"
         className="input"
+        value={formData.name}
         onChange={handleChange}
         required
       />
+      <p className="label">Expiration Date</p>
+      <div className="flex space-x-5">
+        <input
+          type="text"
+          inputMode="numeric"
+          placeholder="MM"
+          name="expirMonth"
+          className="input"
+          maxLength={2}
+          value={formData.expirMonth}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="text"
+          placeholder="YY"
+          inputMode="numeric"
+          name="expirYear"
+          className="input"
+          maxLength={2}
+          value={formData.expirYear}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <p className="label">CVV</p>
       <input
         type="text"
-        placeholder="MM/DD"
-        name="expiration"
-        className="input"
-        onChange={handleChange}
-        required
-      />
-      <input
-        type="text"
-        placeholder="CVV"
+        placeholder="xxx"
+        inputMode="numeric"
         name="cvv"
         className="input"
+        maxLength={4}
+        value={formData.cvv}
+        onChange={handleChange}
+        required
+      />
+      <p className="label">Amount</p>
+      <input
+        type="text"
+        inputMode="numeric"
+        placeholder="0.00"
+        name="amount"
+        className="input"
+        value={formData.amount}
         onChange={handleChange}
         required
       />
