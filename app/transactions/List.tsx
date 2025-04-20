@@ -7,7 +7,7 @@ interface TransactionIds {
 const TransactionList = ({ transactionIds }: TransactionIds) => {
   return (
     <div>
-      <h2 className="text-xl mb-5">Transaction List</h2>
+      <h2 className="text-xl mb-5 text-gray-500">Transaction List</h2>
       <ul className="flex flex-col h-full space-y-2">
         {transactionIds.map((transaction) => (
           <li

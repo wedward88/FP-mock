@@ -40,21 +40,29 @@ const TransactionPage = ({ params }: TransactionPageProps) => {
     fetchData();
   }, [id]);
   return (
-    <div>
-      Transaction ID: {id}
-      {transaction && (
-        <div>
-          <p>Card Number: {transaction.number}</p>
-          <p>Name: {transaction.name}</p>
-          <p>Expiry Month: {transaction.expirMonth}</p>
-          <p>Expiry Year: {transaction.expirYear}</p>
-          <p>CVV: {transaction.cvv}</p>
-          <p>Amount: {transaction.amount}</p>
-          <a className="btn" href="/">
-            Back
-          </a>
+    <div className="flex flex-col items-center my-10 space-y-5">
+      <div>
+        Transaction ID: <span className="font-bold">{id}</span>
+        <div className="flex flex-col space-y-5 mt-5 p-5 border-1 border-gray-300 rounded-xl">
+          {transaction ? (
+            <>
+              <p>Card Number: {transaction.number}</p>
+              <p>Name: {transaction.name}</p>
+              <p>
+                Expiration Date: {transaction.expirMonth}/
+                {transaction.expirYear}
+              </p>
+              <p>CVV: {transaction.cvv}</p>
+              <p>Amount: ${transaction.amount}</p>
+            </>
+          ) : (
+            <p>No transaction found.</p>
+          )}
         </div>
-      )}
+      </div>
+      <a className="btn" href="/">
+        Back
+      </a>
     </div>
   );
 };
