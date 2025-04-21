@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { use, useEffect, useState } from 'react';
 import { IconType } from 'react-icons';
 import {
@@ -117,9 +118,9 @@ const TransactionPage = ({ params }: TransactionPageProps) => {
           </div>
         </div>
       )}
-      <a className="btn" href="/">
+      <Link className="btn" href="/">
         Back
-      </a>
+      </Link>
     </div>
   );
 };

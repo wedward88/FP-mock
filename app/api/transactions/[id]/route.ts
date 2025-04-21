@@ -2,11 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { mockDB } from '../../mockDB';
 
-export async function GET(
-  request: NextRequest,
-  context: { params: { id: string } }
-) {
+interface Context {
+  params: Promise<{ id: string }>;
+}
+
+export async function GET(request: NextRequest, context: Context) {
   const { id } = await context.params;
+  console.log('Incoming request:', request.method, request.url);
 
   if (!id) {
     return NextResponse.json(
