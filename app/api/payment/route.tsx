@@ -21,12 +21,10 @@ const mockCardTransaction = (encryptedData: string) => {
     process.env.NEXT_PUBLIC_ENCRYPTION_SECRET!
   );
 
-  console.log('Card Number:', creditCardData.number);
-  console.log('Name:', creditCardData.name);
-  console.log('Expiry Month:', creditCardData.expirMonth);
-  console.log('Expiry Year:', creditCardData.expirYear);
-  console.log('CVV:', creditCardData.cvv);
-  console.log('Amount:', creditCardData.amount);
+  // Send details off to be processed
+  for (const [key, value] of Object.entries(creditCardData)) {
+    console.log(`${key}: ${value}`);
+  }
 
   return transactionId;
 };

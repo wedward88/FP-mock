@@ -11,3 +11,15 @@ export function decryptData<T>(data: string, key: string): T {
 
   return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 }
+
+export function getCardType(cardNumber: string): string {
+  const cleaned = cardNumber.replace(/\D/g, '');
+
+  if (/^4\d{12}(\d{3})?(\d{3})?$/.test(cleaned)) return 'Visa';
+  if (/^(5[1-5]|2[2-7])\d{14}$/.test(cleaned)) return 'MasterCard';
+  if (/^3[47]\d{13}$/.test(cleaned)) return 'American Express';
+  if (/^6(?:011|5\d{2}|4[4-9]\d)\d{12}$/.test(cleaned))
+    return 'Discover';
+
+  return 'Unknown';
+}

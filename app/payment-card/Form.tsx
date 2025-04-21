@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 
+import CardType from '../components/CardType';
 import { CardData } from '../types/types';
 
 interface CardFormProps {
@@ -77,6 +78,7 @@ const CardForm = ({ onSubmit }: CardFormProps) => {
         onChange={handleChange}
         required
       />
+      <CardType cardDetails={formData} />
       <p className="label">Cardholder Name</p>
       <input
         type="text"
