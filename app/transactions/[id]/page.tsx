@@ -36,16 +36,18 @@ const TransactionPage = ({ params }: TransactionPageProps) => {
   );
   const [loading, setLoading] = useState(true);
 
+  // Determine card issuer via regex
   const cardType = transaction
     ? getCardType(transaction.number)
     : 'Unknown';
 
   const CardIcon =
-    cardType in CARD_TYPE_ICONS
+    cardType !== 'Unknown'
       ? CARD_TYPE_ICONS[cardType as CardType]
       : null;
 
   useEffect(() => {
+    // Fetch transaction data, decrypt it
     const fetchData = async () => {
       try {
         const response = await fetch(`/api/transactions/${id}`, {

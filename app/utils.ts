@@ -13,6 +13,8 @@ export function decryptData<T>(data: string, key: string): T {
 }
 
 export function getCardType(cardNumber: string): string {
+  // Detect card type via regex, Luhn algorithm seemed
+  // overkill for this exercise
   const cleaned = cardNumber.replace(/\D/g, '');
 
   if (/^4\d{12}(\d{3})?(\d{3})?$/.test(cleaned)) return 'Visa';

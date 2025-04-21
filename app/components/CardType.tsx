@@ -18,6 +18,7 @@ const CardType = ({ cardDetails }: CardTypeProps) => {
   if (cardDetails.number) {
     cardType = getCardType(cardDetails.number);
   }
+
   return (
     <div className="flex gap-2 ml-2">
       <FaCcVisa

@@ -5,13 +5,13 @@ import CardType from '../components/CardType';
 import { CardData } from '../types/types';
 
 interface CardFormProps {
-  onSubmit: (
+  submitForm: (
     event: React.FormEvent,
     formData: CardData,
     callBack: () => void
   ) => void;
 }
-const CardForm = ({ onSubmit }: CardFormProps) => {
+const CardForm = ({ submitForm }: CardFormProps) => {
   const defaultFormData: CardData = {
     number: '',
     name: '',
@@ -36,7 +36,7 @@ const CardForm = ({ onSubmit }: CardFormProps) => {
       'amount',
     ];
     let formattedValue = numericFields.includes(name)
-      ? value.replace(/[^\d.]/g, '') // removes non-digits
+      ? value.replace(/[^\d.]/g, '') // removes non-digits, allows decimals
       : value;
 
     // Format card number as XXXX XXXX XXXX XXXX
@@ -54,15 +54,13 @@ const CardForm = ({ onSubmit }: CardFormProps) => {
     }));
   };
 
-  const onSubmitCallback = () => {
+  const clearFormData = () => {
     setFormData(defaultFormData);
   };
 
   return (
     <form
-      onSubmit={(event) =>
-        onSubmit(event, formData, onSubmitCallback)
-      }
+      onSubmit={(event) => submitForm(event, formData, clearFormData)}
       className="flex flex-col space-y-5"
     >
       <p className="label">Card Number</p>

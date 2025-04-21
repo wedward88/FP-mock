@@ -7,6 +7,8 @@ export type CardData = {
   amount: string;
 };
 
+// Everything from CardData, plus an ID
+// from the database
 export type Transaction = {
   id: string;
 } & CardData;

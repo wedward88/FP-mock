@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 import CardForm from './payment-card/Form';
 import TransactionList from './transactions/List';
-import { Transaction } from './types/types';
+import { CardData, Transaction } from './types/types';
 import { encryptData } from './utils';
 
 type TransactionIds = Transaction[];
@@ -13,6 +13,8 @@ export default function Home() {
     useState<TransactionIds>([]);
 
   useEffect(() => {
+    // Fetch any existing transactions
+    // Only runs once on initial render
     const fetchData = async () => {
       try {
         const response = await fetch('/api/transactions', {
@@ -33,11 +35,16 @@ export default function Home() {
   }, []);
   const handleSubmit = async (
     event: React.FormEvent,
-    formData: any,
-    callBack: () => void
+    formData: CardData,
+    clearFormCallback: () => void
   ) => {
+    // Prevent page refresh on submit
+    // Encrypt client-side data, send to server
+    // Update transaction list with new transaction
     event.preventDefault();
     // Encrypt the form data
+    // This is unnecessary when using HTTPS, but thought
+    // it would be fun to implement for this exercise
     const encryptedData = encryptData(
       formData,
       process.env.NEXT_PUBLIC_ENCRYPTION_SECRET!
@@ -51,14 +58,18 @@ export default function Home() {
       body: JSON.stringify(encryptedData),
     });
 
+    if (!response.ok) {
+      throw new Error('Failed to create transaction.');
+    }
+
     const result = await response.json();
     setTransactionIds([...transactionIds, result]);
-    callBack();
+    clearFormCallback();
   };
 
   return (
     <div className="flex justify-around m-10 ">
-      <CardForm onSubmit={handleSubmit} />
+      <CardForm submitForm={handleSubmit} />
       {transactionIds.length > 0 && (
         <TransactionList transactionIds={transactionIds} />
       )}
